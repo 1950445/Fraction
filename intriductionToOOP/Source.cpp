@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 using namespace std;
-
+#define delimiter "\n----------------------------------------------------------------------\n"
 class Fraction
 {
 	int integer;//целая часть
@@ -42,12 +42,23 @@ public:
 		this->denominator = 1;
 		cout << "DefaultConstruct:/t" << this << endl;
 	}
-	Fraction(int integer)
+	explicit Fraction(int integer)
 	{
 		this->integer = integer;
 		this->numerator = 0;
 		this->denominator = 1;
 		cout << "1ArgConstructor:/t" << this << endl;
+	}
+
+	Fraction(double decimal)
+	{
+		decimal += 1e-10;//1*10^-10
+		integer = decimal;
+		decimal -= integer;
+		denominator = 1e+9;//1*10^9 точность всегда будет 9 знаков после запятой
+		numerator = decimal * denominator;
+		reduce();
+		cout << "1ArgDConstructor:\t" << this << endl;
 	}
 	Fraction(int numerator, int denominator)
 	{
@@ -84,6 +95,16 @@ public:
 		cout << "CopyAssgment:/t" << this << endl;
 		return *this;
 	}
+	//Type-cast oparators
+	explicit operator int()const
+	{
+		return integer;
+	}
+	explicit  operator double()const
+	{
+		return integer + (double)numerator / denominator;
+	}
+
 
 	//Methods
 	Fraction& to_improper()
@@ -211,6 +232,7 @@ std:: istream& operator >> (std::istream& is, Fraction& obj)
 	return is;
 
 }
+#define TYPE_CONVERSIONS_BASICS
 void main()
 {
 	setlocale(LC_ALL, "Russian");
@@ -258,10 +280,36 @@ void main()
 	a.reduce();
 	a.print();*/
 
-	Fraction A(5, 10);
+	/*Fraction A(5, 10);
 	cout << "Введите простую дробь:"; cin >> A;
 	cout << A << endl;
 	A.reduce();
+	cout << A << endl;*/
+
+	/*Fraction A =(Fraction) 5;
+	cout << A << endl;
+	cout << delimiter << endl;
+	Fraction B;
+	B =Fraction(8);
+	cout << delimiter << endl;
+	cout << B << endl;*/
+
+	////Fraction C = 12;
+	//Fraction C(12);
+	//cout << C << endl; 
+
+	/*Fraction A(2, 1, 2);
+	cout << A << endl;
+	int a =(int) A;
+	cout << a << endl;
+
+	Fraction B(2, 3, 4);
+	cout << B << endl;
+	double b = (double)B;
+	cout << b << endl;*/
+	Fraction A = 2.76;
 	cout << A << endl;
 
+	Fraction B = 3.333;
+	cout << B << endl;
 }
